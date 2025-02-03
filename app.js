@@ -11,7 +11,7 @@ scene.add(light);
 
 // Set up the loader to load the GLB model
 const loader = new THREE.GLTFLoader();
-loader.load('67a06ffae878695d72d547a7.glb', function (gltf) {
+loader.load('avatar.glb', function (gltf) {
     scene.add(gltf.scene);  // Add the avatar to the scene
     gltf.scene.scale.set(0.5, 0.5, 0.5); // Adjust size of avatar
     gltf.scene.position.set(0, -1, 0); // Position avatar
