@@ -27,7 +27,7 @@ scene.add(directionalLight);
 // Create a GLTFLoader instance to load the Ready Player Me avatar
 const loader = new THREE.GLTFLoader();
 loader.load(
-  'models/avatar.glb', // Ensure this path is correct relative to your index.html
+  'models/avatar.glb', // Ensure this path is correct relative to index.html
   function (gltf) {
     // Called when the resource is loaded successfully
     const avatar = gltf.scene;
@@ -36,7 +36,7 @@ loader.load(
     avatar.position.set(0, -1, 0);
     scene.add(avatar);
   },
-  undefined, // Optionally, you can provide a progress callback here
+  undefined, // You can add a progress callback if needed
   function (error) {
     // Handle any errors that occur during loading
     console.error('Error loading the GLTF model:', error);
@@ -56,4 +56,3 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
