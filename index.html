@@ -3,43 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your App</title>
+    <title>Nepali Companion App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="app-container">
+    <div class="container">
         <header>
-            <div class="menu">
-                <span>☰</span>
-            </div>
-            <div class="notifications">
-                <span>📅</span>
-                <span>🔔(3)</span>
-                <span>💰250</span>
+            <h1>Nepali Companion App</h1>
+            <div class="user-info">
+                <span id="userName">Sweetie</span>
+                <button id="settingsBtn">Settings</button>
             </div>
         </header>
-        <main>
-            <div class="profile-section">
-                <img src="profile-pic.jpg" alt="Profile Picture" class="profile-pic">
-                <h2>मिधु</h2>
-                <p>परिचय ❤️ Level 1</p>
-                <button class="claim-button">Claim Daily 50 Coins!</button>
+        
+        <div class="character-container">
+            <img id="characterImage" src="assets/character.png" alt="Character">
+            <div id="moodIndicator">😊</div>
+        </div>
+
+        <div class="chat-container">
+            <div id="messages"></div>
+            <div class="input-container">
+                <input type="text" id="messageInput" placeholder="Write a message...">
+                <button id="sendBtn">Send</button>
             </div>
-            <div class="function-buttons">
-                <button class="function-button" id="gamesBtn">Games</button>
-                <button class="function-button" id="customizeBtn">Customize</button>
-                <button class="function-button" id="giftsBtn">Gifts</button>
-                <button class="function-button" id="photosBtn">Photos</button>
-                <button class="function-button" id="eventsBtn">Events</button>
+        </div>
+
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h2>Settings</h2>
+                <label for="userNameInput">User  Name:</label>
+                <input type="text" id="userNameInput" value="Sweetie">
+                <button id="saveNameBtn">Save</button>
             </div>
-            <footer>
-                <input type="text" placeholder="Type a message..." id="chatInput" />
-                <button id="sendBtn">➤</button>
-            </footer>
-        </main>
+        </div>
     </div>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+
     <script src="script.js"></script>
 </body>
 </html>
