@@ -1,6 +1,6 @@
 (async () => {
   // API Configuration
-  const API_KEY = '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'; // Replace with your API key
+  const API_KEY = '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'; // Replace with your API key
   // Updated endpoint with correct model version
   const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3";
 
