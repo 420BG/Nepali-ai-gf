@@ -1,6 +1,12 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    // Gemini API Configuration
-    const API_KEY = 'AIzaSyDZij508zywOhfS55m8XQ0CptUF1FnK8yg';
+// Load Google Generative AI SDK
+(async () => {
+    const script = document.createElement('script');
+    script.src = "https://unpkg.com/@google/generative-ai";
+    document.head.appendChild(script);
+    await new Promise(resolve => script.onload = resolve);
+
+    // API Configuration
+    const API_KEY = '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'; // Replace with your API key
     const genAI = new window.googleGenerativeAI.GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
@@ -19,14 +25,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         messageDiv.textContent = text;
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
+        return messageDiv; // Return message element for removal
     }
 
-    // Get Gemini response
+    // Get AI response
     async function getAIResponse(prompt) {
         try {
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            return response.text();
+            const chat = model.startChat();
+            const result = await chat.sendMessage(prompt);
+            return result.candidates[0].content.parts[0].text;
         } catch (error) {
             console.error('AI Error:', error);
             return "Sorry, I'm having trouble responding right now. Please try again later.";
@@ -48,12 +55,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             // Get AI response
             const response = await getAIResponse(message);
-            
-            // Remove loading and add actual response
             chatMessages.removeChild(loadingMsg);
             addMessage(response, false);
-            
-            // Store conversation
             chatHistory.push({ user: message, ai: response });
         } catch (error) {
             chatMessages.removeChild(loadingMsg);
@@ -69,4 +72,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initial message
     addMessage("Namaste! How can I assist you today? 😊", false);
-});
+})();
