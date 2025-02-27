@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #FF9CAE;
-    color: white;
+    color: #333;
     margin: 0;
     padding: 0;
 }
@@ -10,97 +10,180 @@ body {
     max-width: 600px;
     margin: auto;
     padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 15px;
+    background-color: #FF69B4;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    color: white;
+    margin: 0;
+    font-size: 1.5em;
 }
 
 .character-container {
     text-align: center;
     margin: 20px 0;
+    position: relative;
 }
 
 #characterImage {
     width: 200px;
     height: 200px;
-    border-radius: 100px;
+    border-radius: 50%;
     border: 5px solid white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+#moodIndicator {
+    position: absolute;
+    bottom: -10px;
+    right: 50%;
+    transform: translateX(50%);
+    font-size: 24px;
+    background: white;
+    border-radius: 50%;
+    padding: 5px;
 }
 
 #messages {
     background-color: white;
-    color: black;
-    padding: 10px;
+    padding: 15px;
     border-radius: 10px;
-    height: 300px;
+    height: 400px;
     overflow-y: auto;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.user-message {
+    background: #FFB3D1;
+    color: #333;
+    padding: 12px 15px;
+    border-radius: 15px;
+    align-self: flex-end;
+    max-width: 80%;
+    position: relative;
+}
+
+.ai-message {
+    background: #f0f0f0;
+    color: #333;
+    padding: 12px 15px;
+    border-radius: 15px;
+    align-self: flex-start;
+    max-width: 80%;
+    position: relative;
 }
 
 .input-container {
     display: flex;
+    gap: 10px;
 }
 
 #messageInput {
     flex: 1;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    padding: 12px;
+    border-radius: 25px;
+    border: 2px solid #FF69B4;
+    font-size: 16px;
 }
 
 #sendBtn {
-    padding: 10px;
+    padding: 12px 25px;
     background-color: #FF69B4;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
     color: white;
     cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 #sendBtn:hover {
     background-color: #FF1493;
+    transform: scale(1.05);
+}
+
+.timestamp {
+    font-size: 0.75em;
+    color: #666;
+    display: block;
+    text-align: right;
+    margin-top: 5px;
 }
 
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-    padding-top: 60px;
+    background-color: rgba(0,0,0,0.5);
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 25px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
 }
 
 .close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
     color: #aaa;
-    float: right;
     font-size: 28px;
     font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
     cursor: pointer;
 }
 
-.timestamp {
-    font-size: 10px;
-    color: #888;
-   
+.close:hover {
+    color: #FF69B4;
+}
+
+.user-info button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: white;
+    cursor: pointer;
+}
+
+.user-info button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 480px) {
+    #characterImage {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    #messages {
+        height: 50vh;
+    }
+}
