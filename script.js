@@ -1,18 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Gemini API Configuration
+    const API_KEY = 'AIzaSyDZij508zywOhfS55m8XQ0CptUF1FnK8yg';
+    const genAI = new window.googleGenerativeAI.GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
+    // Chat elements
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
 
-    // Simple AI responses
-    const responses = {
-        hello: "Namaste! How can I help you today? 😊",
-        name: "My name is Mithu! What's your name?",
-        love: "You're so sweet! 💖",
-        sad: "I'm here for you 😔",
-        joke: "Why did the computer go to therapy? It had too many bytes of emotional baggage! 😂",
-        default: "That's interesting! Tell me more!"
-    };
+    // Chat history storage
+    let chatHistory = [];
 
+    // Add message to chat
     function addMessage(text, isUser) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
@@ -21,34 +21,52 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function getResponse(input) {
-        input = input.toLowerCase();
-        if (input.includes('hello')) return responses.hello;
-        if (input.includes('name')) return responses.name;
-        if (input.includes('love') || input.includes('like')) return responses.love;
-        if (input.includes('sad')) return responses.sad;
-        if (input.includes('joke')) return responses.joke;
-        return responses.default;
+    // Get Gemini response
+    async function getAIResponse(prompt) {
+        try {
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            return response.text();
+        } catch (error) {
+            console.error('AI Error:', error);
+            return "Sorry, I'm having trouble responding right now. Please try again later.";
+        }
     }
 
-    function handleSend() {
+    // Handle message sending
+    async function handleSend() {
         const message = userInput.value.trim();
         if (!message) return;
 
+        // Add user message
         addMessage(message, true);
         userInput.value = '';
 
-        setTimeout(() => {
-            const response = getResponse(message);
+        // Add loading indicator
+        const loadingMsg = addMessage("Thinking...", false);
+
+        try {
+            // Get AI response
+            const response = await getAIResponse(message);
+            
+            // Remove loading and add actual response
+            chatMessages.removeChild(loadingMsg);
             addMessage(response, false);
-        }, 500);
+            
+            // Store conversation
+            chatHistory.push({ user: message, ai: response });
+        } catch (error) {
+            chatMessages.removeChild(loadingMsg);
+            addMessage("Error processing your request", false);
+        }
     }
 
+    // Event listeners
     sendBtn.addEventListener('click', handleSend);
     userInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleSend();
     });
 
     // Initial message
-    addMessage(responses.hello, false);
+    addMessage("Namaste! How can I assist you today? 😊", false);
 });
