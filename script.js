@@ -46,16 +46,38 @@ document.addEventListener("DOMContentLoaded", () => {
         messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
     };
 
+    const generateAIResponse = (userMessage) => {
+        const lowerCaseMessage = userMessage.toLowerCase();
+        let aiResponse = "That's interesting! Tell me more! 😊";
+
+        if (lowerCaseMessage.includes("how are you")) {
+            aiResponse = "I'm just a program, but I'm here to help you! How about you? 😊";
+        } else if (lowerCaseMessage.includes("love") || lowerCaseMessage.includes("like")) {
+            aiResponse = "Love is a beautiful feeling! What do you love the most? ❤️";
+        } else if (lowerCaseMessage.includes("happy")) {
+            aiResponse = "I'm glad to hear that! What makes you happy? 😄";
+        } else if (lowerCaseMessage.includes("sad")) {
+            aiResponse = "I'm sorry to hear that. It's okay to feel sad sometimes. Want to talk about it? 😔";
+        } else if (lowerCaseMessage.includes("joke")) {
+            aiResponse = "Why don't scientists trust atoms? Because they make up everything! 😂";
+        } else if (lowerCaseMessage.includes("nepal")) {
+            aiResponse = "Nepal is such a beautiful country! Have you visited any places there? 🏔️";
+        }
+
+        return aiResponse;
+    };
+
     sendBtn.addEventListener("click", () => {
         const messageText = messageInput.value.trim();
         if (messageText) {
             responses.push({ text: messageText, is:User  true });
             messageInput.value = '';
             updateMessages();
-            // Simulate AI response
+
+            // Generate AI response
             setTimeout(() => {
-                const aiResponse = { text: "Thank you for your message! 😊", is:User  false };
-                responses.push(aiResponse);
+                const aiResponse = generateAIResponse(messageText);
+                responses.push({ text: aiResponse, is:User  false });
                 updateMessages();
             }, 1000);
         }
