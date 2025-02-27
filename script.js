@@ -1,74 +1,75 @@
-// Load Google Generative AI SDK
-(async () => {
-    const script = document.createElement('script');
-    script.src = "https://unpkg.com/@google/generative-ai";
-    document.head.appendChild(script);
-    await new Promise(resolve => script.onload = resolve);
+// API Configuration
+const API_KEY = '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'; // Replace with your API key
+const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct"; // Hugging Face API URL
 
-    // API Configuration
-    const API_KEY = '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'; // Replace with your valid API key
-    const genAI = new window.googleGenerativeAI.GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+// Chat elements
+const chatMessages = document.getElementById('chat-messages');
+const userInput = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
 
-    // Chat elements
-    const chatMessages = document.getElementById('chat-messages');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
+// Function to add message to chatbox
+function addMessage(text, isUser) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+    messageDiv.textContent = text;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return messageDiv; // Return message element for removal
+}
 
-    // Chat history storage
-    let chatHistory = [];
+// Function to get AI response from Hugging Face
+async function getAIResponse(prompt) {
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ inputs: prompt })
+        });
 
-    // Add message to chatbox
-    function addMessage(text, isUser) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-        messageDiv.textContent = text;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-        return messageDiv; // Return message element
-    }
+        const data = await response.json();
 
-    // Get AI response
-    async function getAIResponse(prompt) {
-        try {
-            const result = await model.generateContent(prompt);
-            return result.response.text(); // Properly accessing response text
-        } catch (error) {
-            console.error('AI Error:', error);
-            return "Sorry, I'm having trouble responding right now. Please try again later.";
+        if (data && Array.isArray(data)) {
+            return data[0].generated_text || "Sorry, I couldn't generate a response.";
+        } else {
+            return "Sorry, I couldn't generate a response.";
         }
+    } catch (error) {
+        console.error("AI Error:", error);
+        return "Error connecting to AI. Please try again.";
     }
+}
 
-    // Handle sending message
-    async function handleSend() {
-        const message = userInput.value.trim();
-        if (!message) return;
+// Function to handle sending messages
+async function handleSend() {
+    const message = userInput.value.trim();
+    if (!message) return;
 
-        // Add user message
-        addMessage(message, true);
-        userInput.value = '';
+    // Add user message
+    addMessage(message, true);
+    userInput.value = '';
 
-        // Add loading indicator
-        const loadingMsg = addMessage("Thinking...", false);
+    // Add loading indicator
+    const loadingMsg = addMessage("Thinking...", false);
 
-        try {
-            // Get AI response
-            const response = await getAIResponse(message);
-            chatMessages.removeChild(loadingMsg);
-            addMessage(response, false);
-            chatHistory.push({ user: message, ai: response });
-        } catch (error) {
-            chatMessages.removeChild(loadingMsg);
-            addMessage("Error processing your request", false);
-        }
+    try {
+        // Get AI response
+        const response = await getAIResponse(message);
+        chatMessages.removeChild(loadingMsg);
+        addMessage(response, false);
+    } catch (error) {
+        chatMessages.removeChild(loadingMsg);
+        addMessage("Error processing your request", false);
     }
+}
 
-    // Event listeners
-    sendBtn.addEventListener('click', handleSend);
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSend();
-    });
+// Event listeners for send button and enter key
+sendBtn.addEventListener('click', handleSend);
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleSend();
+});
 
-    // Initial message
-    addMessage("Baby! How can I assist you today? 😊", false);
-})();
+// Initial bot message
+addMessage("Baby! How can I assist you today? 😊", false);
