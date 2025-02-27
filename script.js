@@ -1,6 +1,6 @@
 // API Configuration
 const API_KEY = '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'; // Replace with your API key
-const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct"; // Hugging Face API URL
+const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct"; // Ensure this is the correct endpoint
 
 // Chat elements
 const chatMessages = document.getElementById('chat-messages');
@@ -20,6 +20,7 @@ function addMessage(text, isUser) {
 // Function to get AI response from Hugging Face
 async function getAIResponse(prompt) {
     try {
+        console.log("Sending prompt to API:", prompt);
         const response = await fetch(API_URL, {
             method: "POST",
             headers: {
@@ -28,11 +29,14 @@ async function getAIResponse(prompt) {
             },
             body: JSON.stringify({ inputs: prompt })
         });
-
+        console.log("Response status:", response.status);
         const data = await response.json();
+        console.log("Response data:", data);
 
         if (data && Array.isArray(data)) {
             return data[0].generated_text || "Sorry, I couldn't generate a response.";
+        } else if (data && data.generated_text) {
+            return data.generated_text;
         } else {
             return "Sorry, I couldn't generate a response.";
         }
@@ -47,6 +51,7 @@ async function handleSend() {
     const message = userInput.value.trim();
     if (!message) return;
 
+    console.log("Send button clicked with message:", message);
     // Add user message
     addMessage(message, true);
     userInput.value = '';
@@ -68,7 +73,9 @@ async function handleSend() {
 // Event listeners for send button and enter key
 sendBtn.addEventListener('click', handleSend);
 userInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleSend();
+    if (e.key === 'Enter') {
+        handleSend();
+    }
 });
 
 // Initial bot message
