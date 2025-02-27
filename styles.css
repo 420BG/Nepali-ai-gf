@@ -99,3 +99,8 @@ header {
     text-decoration: none;
     cursor: pointer;
 }
+
+.timestamp {
+    font-size: 10px;
+    color: #888;
+   
