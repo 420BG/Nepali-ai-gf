@@ -1,129 +1,125 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // DOM Elements
     const messagesDiv = document.getElementById("messages");
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
     const settingsBtn = document.getElementById("settingsBtn");
     const settingsModal = document.getElementById("settingsModal");
     const closeModal = document.getElementById("closeModal");
+    const saveSettingsBtn = document.getElementById("saveSettingsBtn");
     const userNameInput = document.getElementById("userNameInput");
     const characterImageInput = document.getElementById("characterImageInput");
-    const saveSettingsBtn = document.getElementById("saveSettingsBtn");
     const userNameDisplay = document.getElementById("userName");
     const characterImage = document.getElementById("characterImage");
-    const moodIndicator = document.getElementById("moodIndicator");
 
-    // Initialize responses with default messages
-    let responses = [
-        { text: "Hey baby! I've been waiting to meet someone like you! How's your day going? 💕", isUser: false },
-        { text: "My name is Mithu. I'm so excited to get to know you better, sweetie! 😘", isUser: false },
+    // Chat Data
+    let chatHistory = [
+        { text: "Hey there! How can I help you today? 😊", isUser: false, time: new Date() },
+        { text: "My name is Mithu. What's your name?", isUser: false, time: new Date() }
     ];
 
-    // Load saved settings from local storage
+    // Load Settings
     const loadSettings = () => {
-        const savedUserName = localStorage.getItem("userName");
-        const savedCharacterImage = localStorage.getItem("characterImage");
-        if (savedUserName) {
-            userNameDisplay.textContent = savedUserName;
-            userNameInput.value = savedUserName;
+        const savedName = localStorage.getItem("userName");
+        const savedImage = localStorage.getItem("characterImage");
+        if (savedName) {
+            userNameDisplay.textContent = savedName;
+            userNameInput.value = savedName;
         }
-        if (savedCharacterImage) {
-            characterImage.src = savedCharacterImage;
-            characterImageInput.value = savedCharacterImage;
+        if (savedImage) {
+            characterImage.src = savedImage;
+            characterImageInput.value = savedImage;
         }
     };
 
-    const updateMessages = () => {
-        messagesDiv.innerHTML = '';
-        responses.forEach(response => {
+    // Update Chat Display
+    const updateChat = () => {
+        messagesDiv.innerHTML = "";
+        chatHistory.forEach(msg => {
             const messageDiv = document.createElement("div");
-            messageDiv.textContent = response.text;
-            messageDiv.className = response.isUser ? "user-message" : "ai-message";
-            
-            // Add timestamp
-            const timestamp = document.createElement("span");
-            timestamp.className = "timestamp";
-            timestamp.textContent = new Date().toLocaleTimeString([], { 
-                hour: '2-digit', 
-                minute: '2-digit'
-            });
-            
-            messageDiv.appendChild(timestamp);
+            messageDiv.className = msg.isUser ? "user-message" : "ai-message";
+            messageDiv.innerHTML = `
+                ${msg.text}
+                <span class="timestamp">${msg.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            `;
             messagesDiv.appendChild(messageDiv);
         });
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     };
 
-    const generateAIResponse = (userMessage) => {
-        const lowerCaseMessage = userMessage.toLowerCase();
-        let aiResponse = "That's interesting! Tell me more! 😊";
+    // AI Response Logic
+    const generateResponse = (message) => {
+        const lowerMsg = message.toLowerCase();
+        const responses = {
+            hello: "Hello there! How can I assist you today? 😊",
+            name: "My name is Mithu! What's yours?",
+            love: "That's so sweet! Relationships are important 💖",
+            sad: "I'm here to listen. What's bothering you? 😔",
+            joke: "Why don't eggs tell jokes? They'd crack up! 🥚😂",
+            nepal: "Nepal is beautiful! Have you visited Pokhara? 🏔️",
+            default: "That's interesting! Tell me more about that! 😊"
+        };
 
-        // Improved response logic
-        if (/how are you/i.test(userMessage)) {
-            aiResponse = "I'm just a program, but I'm here for you! How about you? 😊";
-        } else if (/(love|like)/i.test(userMessage)) {
-            aiResponse = "Love is wonderful! What makes you feel that way? ❤️";
-        } else if (/happy/i.test(userMessage)) {
-            aiResponse = "Your happiness makes me smile! 😄 What's making you happy?";
-        } else if /sad/i.test(userMessage)) {
-            aiResponse = "I'm here to listen. Want to share what's bothering you? 😔";
-        } else if (/joke/i.test(userMessage)) {
-            aiResponse = "Why did the computer go to therapy? It had too many bytes of emotional baggage! 😂";
-        } else if (/nepal/i.test(userMessage)) {
-            aiResponse = "Nepal's beauty is unmatched! Have you visited Pokhara? 🏔️";
-        } else if (/name/i.test(userMessage)) {
-            aiResponse = "You can call me Mithu! What should I call you? 😊";
-        }
-
-        return aiResponse;
+        if (/hello|hi|hey/.test(lowerMsg)) return responses.hello;
+        if (/name/.test(lowerMsg)) return responses.name;
+        if (/love|like/.test(lowerMsg)) return responses.love;
+        if (/sad|unhappy/.test(lowerMsg)) return responses.sad;
+        if (/joke|funny/.test(lowerMsg)) return responses.joke;
+        if (/nepal/.test(lowerMsg)) return responses.nepal;
+        return responses.default;
     };
 
-    // Event Listeners
-    sendBtn.addEventListener("click", () => {
-        const messageText = messageInput.value.trim();
-        if (messageText) {
-            // Add user message
-            responses.push({ text: messageText, isUser: true });
-            messageInput.value = '';
-            updateMessages();
+    // Message Handling
+    sendBtn.addEventListener("click", sendMessage);
+    messageInput.addEventListener("keypress", (e) => e.key === "Enter" && sendMessage());
 
-            // Generate and add AI response
-            setTimeout(() => {
-                const aiResponse = generateAIResponse(messageText);
-                responses.push({ text: aiResponse, isUser: false });
-                updateMessages();
-            }, 800); // Reduced delay for better UX
-        }
-    });
+    function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
 
-    // Modal Handling
+        // Add user message
+        chatHistory.push({
+            text: message,
+            isUser: true,
+            time: new Date()
+        });
+        messageInput.value = "";
+        updateChat();
+
+        // Generate AI response after delay
+        setTimeout(() => {
+            const response = generateResponse(message);
+            chatHistory.push({
+                text: response,
+                isUser: false,
+                time: new Date()
+            });
+            updateChat();
+        }, 800);
+    }
+
+    // Settings Modal
     settingsBtn.addEventListener("click", () => settingsModal.style.display = "block");
     closeModal.addEventListener("click", () => settingsModal.style.display = "none");
     
     saveSettingsBtn.addEventListener("click", () => {
-        const newUserName = userNameInput.value.trim();
-        const newCharacterImage = characterImageInput.value.trim();
+        const newName = userNameInput.value.trim();
+        const newImage = characterImageInput.value.trim();
         
-        if (newUserName) {
-            userNameDisplay.textContent = newUserName;
-            localStorage.setItem("userName", newUserName);
+        if (newName) {
+            userNameDisplay.textContent = newName;
+            localStorage.setItem("userName", newName);
         }
         
-        if (newCharacterImage) {
-            characterImage.src = newCharacterImage;
-            localStorage.setItem("characterImage", newCharacterImage);
+        if (newImage) {
+            characterImage.src = newImage;
+            localStorage.setItem("characterImage", newImage);
         }
         
         settingsModal.style.display = "none";
     });
 
-    // Close modal when clicking outside
-    window.onclick = (event) => {
-        if (event.target === settingsModal) {
-            settingsModal.style.display = "none";
-        }
-    };
-
-    // Initial setup
+    // Initial Setup
     loadSettings();
-    updateMessages();
+    updateChat();
 });
