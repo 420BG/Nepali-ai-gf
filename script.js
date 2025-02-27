@@ -1,53 +1,67 @@
-// Firebase configuration
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
+document.addEventListener("DOMContentLoaded", () => {
+    const messagesDiv = document.getElementById("messages");
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const settingsBtn = document.getElementById("settingsBtn");
+    const settingsModal = document.getElementById("settingsModal");
+    const closeModal = document.getElementById("closeModal");
+    const userNameInput = document.getElementById("userNameInput");
+    const saveNameBtn = document.getElementById("saveNameBtn");
+    const userNameDisplay = document.getElementById("userName");
+    const moodIndicator = document.getElementById("moodIndicator");
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+    const responses = [
+        { text: "Hey baby! I've been waiting to meet someone like you! How's your day going? 💕", is:User  false },
+        { text: "My name is Mithu. I'm so excited to get to know you better, sweetie! 😘", is:User  false },
+    ];
 
-// Google Authentication Function
-function googleAuth() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider).then((result) => {
-        console.log("User signed in:", result.user);
-    }).catch((error) => {
-        console.error("Authentication Error:", error);
+    const updateMessages = () => {
+        messagesDiv.innerHTML = '';
+        responses.forEach(response => {
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = response.text;
+            messageDiv.className = response.isUser  ? "user-message" : "ai-message";
+            messagesDiv.appendChild(messageDiv);
+        });
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+    };
+
+    sendBtn.addEventListener("click", () => {
+        const messageText = messageInput.value.trim();
+        if (messageText) {
+            responses.push({ text: messageText, is:User  true });
+            messageInput.value = '';
+            updateMessages();
+            // Simulate AI response
+            setTimeout(() => {
+                const aiResponse = { text: "Thank you for your message! 😊", is:User  false };
+                responses.push(aiResponse);
+                updateMessages();
+            }, 1000);
+        }
     });
-}
 
-// Functionality for buttons
-document.getElementById('gamesBtn').addEventListener('click', () => {
-    alert("Games function clicked!");
-});
+    settingsBtn.addEventListener("click", () => {
+        settingsModal.style.display = "block";
+    });
 
-document.getElementById('customizeBtn').addEventListener('click', () => {
-    alert("Customize function clicked!");
-});
+    closeModal.addEventListener("click", () => {
+        settingsModal.style.display = "none";
+    });
 
-document.getElementById('giftsBtn').addEventListener('click', () => {
-    alert("Gifts function clicked!");
-});
+    saveNameBtn.addEventListener("click", () => {
+        const newUser Name = userNameInput.value.trim();
+        if (newUser Name) {
+            userNameDisplay.textContent = newUser Name;
+        }
+        settingsModal.style.display = "none";
+    });
 
-document.getElementById('photosBtn').addEventListener('click', () => {
-    alert("Photos function clicked!");
-});
+    window.onclick = function(event) {
+        if (event.target == settingsModal) {
+            settingsModal.style.display = "none";
+        }
+    };
 
-document.getElementById('eventsBtn').addEventListener('click', () => {
-    alert("Events function clicked!");
-});
-
-// Chat Functionality
-document.getElementById('sendBtn').addEventListener('click', () => {
-    const message = document.getElementById('chatInput').value;
-    if (message.trim()) {
-        // Call the Gemini API to send the chat message
-        console.log("Message to send:", message);
-        document.getElementById('chatInput').value = ""; // Clear input
-    }
+    updateMessages(); // Initial message update
 });
