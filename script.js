@@ -1,28 +1,29 @@
 (async () => {
   // API Configuration
-  const API_KEY = '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'; // Replace with your API key
-  // Updated endpoint with correct model version
-  const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3";
+  const API_KEY = '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'; // Replace with your API key
+  const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"; // Correct model endpoint
 
   // Chat elements
   const chatMessages = document.getElementById('chat-messages');
   const userInput = document.getElementById('user-input');
   const sendBtn = document.getElementById('send-btn');
 
-  // Function to add message to chatbox
+  // Function to add a message to the chatbox
   function addMessage(text, isUser) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
     messageDiv.textContent = text;
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    return messageDiv; // Return message element for removal
+    return messageDiv;
   }
 
-  // Function to get AI response from Hugging Face with additional parameters
+  // Function to get AI response with a friendly, affectionate tone
   async function getAIResponse(prompt) {
-    // Wrap the prompt in a conversation format
-    const formattedPrompt = `User: ${prompt}\nAssistant:`;
+    // Updated prompt: instruct the model to use loving, friendly language without using labels
+    const formattedPrompt = `You are a warm and affectionate chatbot who always responds with friendly, love-filled words and care. Do not include any labels like "Assistant:" in your reply. Now, respond to the following:
+User: ${prompt}
+`;
     console.log("Sending prompt:", formattedPrompt);
 
     try {
@@ -31,7 +32,6 @@
         headers: {
           "Authorization": `Bearer ${API_KEY}`,
           "Content-Type": "application/json",
-          // Force waiting if the model is cold
           "x-wait-for-model": "true"
         },
         body: JSON.stringify({
@@ -76,16 +76,14 @@
     addMessage(message, true);
     userInput.value = "";
 
-    // Add loading indicator
     const loadingMsg = addMessage("Thinking...", false);
 
-    // Get AI response and update chat
     const aiResponse = await getAIResponse(message);
     chatMessages.removeChild(loadingMsg);
     addMessage(aiResponse, false);
   }
 
-  // Event listeners for the send button and Enter key
+  // Event listeners for send button and Enter key
   sendBtn.addEventListener("click", handleSend);
   userInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
