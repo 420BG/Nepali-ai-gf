@@ -1,45 +1,45 @@
 <!DOCTYPE html>
-<html lang="ne">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>साथी - Nepali AI GF</title>
+    <title>Your App</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-    <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <header>
-            <button class="menu-btn">☰</button>
-            <h1>साथी</h1>
-            <div class="top-right">
-                <button class="calendar-btn">📅</button>
-                <button class="notif-btn">🔔<span class="badge">3</span></button>
-                <div class="coins">💰 <span id="coin-count">250</span>+</div>
+            <div class="menu">
+                <span>☰</span>
+            </div>
+            <div class="notifications">
+                <span>📅</span>
+                <span>🔔(3)</span>
+                <span>💰250</span>
             </div>
         </header>
-        <section class="profile">
-            <button class="claim-btn">🎁 Claim Daily 50 Coins!</button>
-            <img src="character.png" alt="Character" class="avatar">
-            <h2>मिटू</h2>
-            <p>परिचय ❤️ Lv.1</p>
-        </section>
-        <nav class="menu">
-            <button>🎮 Games</button>
-            <button>👕 Customize</button>
-            <button>🎁 Gifts</button>
-            <button>📸 Photos</button>
-            <button>📅 Events</button>
-        </nav>
-        <section class="chat-box">
-            <input type="text" id="chat-input" placeholder="मिटूलाइ केही लेख्नुहोस्...">
-            <button id="send-btn">➡</button>
-        </section>
-        <button id="google-login" class="login-btn">Sign in with Google</button>
+        <main>
+            <div class="profile-section">
+                <img src="profile-pic.jpg" alt="Profile Picture" class="profile-pic">
+                <h2>मिधु</h2>
+                <p>परिचय ❤️ Level 1</p>
+                <button class="claim-button">Claim Daily 50 Coins!</button>
+            </div>
+            <div class="function-buttons">
+                <button class="function-button" id="gamesBtn">Games</button>
+                <button class="function-button" id="customizeBtn">Customize</button>
+                <button class="function-button" id="giftsBtn">Gifts</button>
+                <button class="function-button" id="photosBtn">Photos</button>
+                <button class="function-button" id="eventsBtn">Events</button>
+            </div>
+            <footer>
+                <input type="text" placeholder="Type a message..." id="chatInput" />
+                <button id="sendBtn">➤</button>
+            </footer>
+        </main>
     </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
