@@ -1,49 +1,59 @@
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #ffccd5, #ffebf0);
-    text-align: center;
-    padding: 10px;
+    background-color: #f8d2e7;
 }
-.container {
-    max-width: 400px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
-.avatar {
-    width: 120px;
-    border-radius: 50%;
-}
-.menu button, .claim-btn, .login-btn {
-    display: block;
-    width: 100%;
-    margin: 5px 0;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #ff6699;
-    color: white;
-}
-.chat-box {
+
+header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-}
-.chat-box input {
-    width: 80%;
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    background-color: white;
 }
-.chat-box button {
-    padding: 10px;
-    background: #ff6699;
-    border: none;
-    border-radius: 5px;
+
+.profile-section {
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    width: 100px;
+}
+
+.claim-button {
+    background-color: #ff5f99;
     color: white;
+    border: none;
+    padding: 10px 20px;
     cursor: pointer;
+}
+
+.function-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.function-button {
+    background-color: #ff80b9;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-top: 1px solid white;
+    background-color: white;
 }
