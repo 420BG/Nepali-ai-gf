@@ -3,15 +3,12 @@
     const script = document.createElement('script');
     script.src = "https://unpkg.com/@google/generative-ai";
     document.head.appendChild(script);
-    
     await new Promise(resolve => script.onload = resolve);
 
     // API Configuration
-    const API_KEY = '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'; // Replace with your API key
-    const genAI = new google.generativeai.GenerativeModel({
-        model: 'gemini-pro',
-        apiKey: API_KEY
-    });
+    const API_KEY = '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'; // Replace with your valid API key
+    const genAI = new window.googleGenerativeAI.GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
     // Chat elements
     const chatMessages = document.getElementById('chat-messages');
@@ -28,24 +25,21 @@
         messageDiv.textContent = text;
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        return messageDiv; // Return message element for removal
+        return messageDiv; // Return message element
     }
 
     // Get AI response
     async function getAIResponse(prompt) {
         try {
-            const result = await genAI.generateContent({
-                contents: [{ role: "user", parts: [{ text: prompt }] }]
-            });
-
-            return result.response.candidates[0].content.parts[0].text;
+            const result = await model.generateContent(prompt);
+            return result.response.text(); // Properly accessing response text
         } catch (error) {
             console.error('AI Error:', error);
-            return "Sorry, I encountered an issue processing your request. Please try again.";
+            return "Sorry, I'm having trouble responding right now. Please try again later.";
         }
     }
 
-    // Handle message sending
+    // Handle sending message
     async function handleSend() {
         const message = userInput.value.trim();
         if (!message) return;
