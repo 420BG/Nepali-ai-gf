@@ -3,12 +3,15 @@
     const script = document.createElement('script');
     script.src = "https://unpkg.com/@google/generative-ai";
     document.head.appendChild(script);
+    
     await new Promise(resolve => script.onload = resolve);
 
     // API Configuration
     const API_KEY = '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'; // Replace with your API key
-    const genAI = new window.googleGenerativeAI.GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const genAI = new google.generativeai.GenerativeModel({
+        model: 'gemini-pro',
+        apiKey: API_KEY
+    });
 
     // Chat elements
     const chatMessages = document.getElementById('chat-messages');
@@ -18,7 +21,7 @@
     // Chat history storage
     let chatHistory = [];
 
-    // Add message to chat
+    // Add message to chatbox
     function addMessage(text, isUser) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
@@ -31,12 +34,14 @@
     // Get AI response
     async function getAIResponse(prompt) {
         try {
-            const chat = model.startChat();
-            const result = await chat.sendMessage(prompt);
-            return result.candidates[0].content.parts[0].text;
+            const result = await genAI.generateContent({
+                contents: [{ role: "user", parts: [{ text: prompt }] }]
+            });
+
+            return result.response.candidates[0].content.parts[0].text;
         } catch (error) {
             console.error('AI Error:', error);
-            return "Sorry, I'm having trouble responding right now. Please try again later.";
+            return "Sorry, I encountered an issue processing your request. Please try again.";
         }
     }
 
@@ -71,5 +76,5 @@
     });
 
     // Initial message
-    addMessage("Namaste! How can I assist you today? 😊", false);
+    addMessage("Baby! How can I assist you today? 😊", false);
 })();
