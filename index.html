@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>साथी - Nepali AI GF</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="menu-btn">☰</button>
+            <h1>साथी</h1>
+            <div class="top-right">
+                <button class="calendar-btn">📅</button>
+                <button class="notif-btn">🔔<span class="badge">3</span></button>
+                <div class="coins">💰 <span id="coin-count">250</span>+</div>
+            </div>
+        </header>
+        <section class="profile">
+            <button class="claim-btn">🎁 Claim Daily 50 Coins!</button>
+            <img src="character.png" alt="Character" class="avatar">
+            <h2>मिटू</h2>
+            <p>परिचय ❤️ Lv.1</p>
+        </section>
+        <nav class="menu">
+            <button>🎮 Games</button>
+            <button>👕 Customize</button>
+            <button>🎁 Gifts</button>
+            <button>📸 Photos</button>
+            <button>📅 Events</button>
+        </nav>
+        <section class="chat-box">
+            <input type="text" id="chat-input" placeholder="मिटूलाइ केही लेख्नुहोस्...">
+            <button id="send-btn">➡</button>
+        </section>
+        <button id="google-login" class="login-btn">Sign in with Google</button>
+    </div>
+</body>
+</html>
