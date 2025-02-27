@@ -17,10 +17,10 @@ function addMessage(text, isUser) {
   return messageDiv; // Return message element for removal
 }
 
-// Function to get AI response from Hugging Face with additional parameters
+// Function to get AI response from Hugging Face with extra parameters and waiting header
 async function getAIResponse(prompt) {
   try {
-    // Optional: wrap the prompt in a simple conversation format
+    // Wrap the prompt in a simple conversation format
     const formattedPrompt = `User: ${prompt}\nAssistant:`;
     console.log("Sending prompt to API:", formattedPrompt);
     
@@ -28,7 +28,9 @@ async function getAIResponse(prompt) {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        // Force waiting for model if it's cold
+        "x-wait-for-model": "true"
       },
       body: JSON.stringify({
         inputs: formattedPrompt,
@@ -41,12 +43,22 @@ async function getAIResponse(prompt) {
     });
     
     console.log("Response status:", response.status);
+    if (!response.ok) {
+      const errData = await response.json();
+      console.error("API Error:", errData);
+      return `Error: ${errData.error || "Unknown error"}`;
+    }
+    
     const data = await response.json();
     console.log("Response data:", data);
     
-    if (data && Array.isArray(data)) {
+    if (data.error) {
+      return `Error: ${data.error}`;
+    }
+    
+    if (Array.isArray(data)) {
       return data[0].generated_text || "Sorry, I couldn't generate a response.";
-    } else if (data && data.generated_text) {
+    } else if (data.generated_text) {
       return data.generated_text;
     } else {
       return "Sorry, I couldn't generate a response.";
