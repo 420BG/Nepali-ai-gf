@@ -1,7 +1,7 @@
 (async () => {
   // API Configuration
-  const API_KEY = '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'; // Your Hume AI API key
-  const API_URL = "https://api.hume.ai/v0/text/generate"; // Correct endpoint
+  const API_KEY = 'AIzaSyBEVgPdNDVJM4NV4Ze2oxSiENLsl2TjKCk'; // Your Hume AI API key
+  const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash"; // Correct endpoint
 
   // Chat elements
   const chatMessages = document.getElementById('chat-messages');
