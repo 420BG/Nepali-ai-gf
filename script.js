@@ -1,6 +1,7 @@
 (async () => {
   // API Configuration
-  const API_KEY = 'JnOIvPtGcHOQLY28UO9VHTshPk0pUaqdmLqdSv1DHZ6ltN26'; // Your Hume AI API key
+  const API_KEY = '
+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'; // Your Hume AI API key
   const API_URL = "https://api.hume.ai/v0/text/generate"; // Correct endpoint
 
   // Chat elements
