@@ -1,7 +1,7 @@
 (async () => {
   // API Configuration
-  const API_KEY = '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'; // Replace with your API key
-  const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"; // Correct model endpoint
+  const API_KEY = 'JnOIvPtGcHOQLY28UO9VHTshPk0pUaqdmLqdSv1DHZ6ltN26'; // Your Hume AI API Key
+  const API_URL = "https://api.hume.ai/v0/models/chat"; // Hume AI Chat API endpoint
 
   // Chat elements
   const chatMessages = document.getElementById('chat-messages');
@@ -18,12 +18,11 @@
     return messageDiv;
   }
 
-  // Function to get AI response with a friendly, affectionate tone
+  // Function to get AI response from Hume AI
   async function getAIResponse(prompt) {
-    // Updated prompt: instruct the model to use loving, friendly language without using labels
-    const formattedPrompt = `You are a warm and affectionate chatbot who always responds with friendly, love-filled words and care. Do not include any labels like "Assistant:" in your reply. Now, respond to the following:
-User: ${prompt}
-`;
+    const formattedPrompt = `You are a warm and affectionate chatbot who always responds with love-filled and caring words. Respond to the following:
+User: ${prompt}`;
+
     console.log("Sending prompt:", formattedPrompt);
 
     try {
@@ -31,36 +30,25 @@ User: ${prompt}
         method: "POST",
         headers: {
           "Authorization": `Bearer ${API_KEY}`,
-          "Content-Type": "application/json",
-          "x-wait-for-model": "true"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          inputs: formattedPrompt,
-          parameters: {
-            max_new_tokens: 200,
-            temperature: 0.7,
-            top_p: 0.9
-          }
+          text: formattedPrompt
         })
       });
+
       console.log("HTTP status:", response.status);
 
       if (!response.ok) {
         const errData = await response.json();
         console.error("Error response:", errData);
-        return `Error: ${errData.error || "API request failed."}`;
+        return `Error: ${errData.message || "API request failed."}`;
       }
 
       const data = await response.json();
       console.log("API response:", data);
 
-      if (Array.isArray(data) && data.length > 0) {
-        return data[0].generated_text || "No response.";
-      } else if (data.generated_text) {
-        return data.generated_text;
-      } else {
-        return "No response.";
-      }
+      return data.text || "No response.";
     } catch (error) {
       console.error("Fetch error:", error);
       return "Error: Could not connect to AI.";
