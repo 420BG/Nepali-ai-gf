@@ -1,29 +1,23 @@
 (async () => {
   // API Configuration
-  const API_KEY = 'JnOIvPtGcHOQLY28UO9VHTshPk0pUaqdmLqdSv1DHZ6ltN26'; // Your Hume AI API Key
-  const API_URL = "https://api.hume.ai/v0/models/chat"; // Hume AI Chat API endpoint
+  const API_KEY = 'JnOIvPtGcHOQLY28UO9VHTshPk0pUaqdmLqdSv1DHZ6ltN26'; // Your Hume AI Key
+  const API_URL = "https://api.hume.ai/v0/models/chat"; // Correct Hume AI API Endpoint
 
   // Chat elements
   const chatMessages = document.getElementById('chat-messages');
   const userInput = document.getElementById('user-input');
   const sendBtn = document.getElementById('send-btn');
 
-  // Function to add a message to the chatbox
   function addMessage(text, isUser) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
     messageDiv.textContent = text;
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    return messageDiv;
   }
 
-  // Function to get AI response from Hume AI
   async function getAIResponse(prompt) {
-    const formattedPrompt = `You are a warm and affectionate chatbot who always responds with love-filled and caring words. Respond to the following:
-User: ${prompt}`;
-
-    console.log("Sending prompt:", formattedPrompt);
+    const formattedPrompt = `User: ${prompt}`;
 
     try {
       const response = await fetch(API_URL, {
@@ -32,12 +26,8 @@ User: ${prompt}`;
           "Authorization": `Bearer ${API_KEY}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          text: formattedPrompt
-        })
+        body: JSON.stringify({ input: { text: formattedPrompt } }) // Adjusted JSON format
       });
-
-      console.log("HTTP status:", response.status);
 
       if (!response.ok) {
         const errData = await response.json();
@@ -46,24 +36,19 @@ User: ${prompt}`;
       }
 
       const data = await response.json();
-      console.log("API response:", data);
-
-      return data.text || "No response.";
+      return data.output || "No response.";
     } catch (error) {
       console.error("Fetch error:", error);
-      return "Error: Could not connect to AI.";
+      return "Error: Could not connect to AI. Check API key and CORS settings.";
     }
   }
 
-  // Function to handle sending messages
   async function handleSend() {
     const message = userInput.value.trim();
     if (!message) return;
 
-    console.log("Send button clicked with message:", message);
     addMessage(message, true);
     userInput.value = "";
-
     const loadingMsg = addMessage("Thinking...", false);
 
     const aiResponse = await getAIResponse(message);
@@ -71,7 +56,6 @@ User: ${prompt}`;
     addMessage(aiResponse, false);
   }
 
-  // Event listeners for send button and Enter key
   sendBtn.addEventListener("click", handleSend);
   userInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
@@ -79,6 +63,5 @@ User: ${prompt}`;
     }
   });
 
-  // Initial bot message
   addMessage("Baby! How can I assist you today? 😊", false);
 })();
