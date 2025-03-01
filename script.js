@@ -1,7 +1,7 @@
 (async () => {
   // API Configuration
-  const API_KEY = 'AIzaSyBEVgPdNDVJM4NV4Ze2oxSiENLsl2TjKCk'; // Your API key
-  const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateText"; // Correct endpoint for generating text
+  const API_KEY = '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'; // Replace with your OpenAI API key
+  const API_URL = "https://api.openai.com/v1/chat/completions"; // OpenAI's ChatGPT API endpoint
 
   // Chat elements
   const chatMessages = document.getElementById('chat-messages');
@@ -17,13 +17,13 @@
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
-  // Function to get AI response
+  // Function to get AI response from OpenAI API
   async function getAIResponse(prompt) {
     const payload = {
-      prompt: prompt,
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "system", content: "You are a helpful AI assistant." }, { role: "user", content: prompt }],
       temperature: 0.7,
-      max_output_tokens: 100, // Add limit for response length
-      stop_sequences: ['\n'], // Add stop sequences if necessary
+      max_tokens: 100,
     };
 
     try {
@@ -39,13 +39,13 @@
       if (!response.ok) {
         const errData = await response.json();
         console.error("Error response:", errData);
-        return `Error: ${errData.error.message || "API request failed."}`;
+        return `Error: ${errData.error?.message || "API request failed."}`;
       }
 
       const data = await response.json();
       console.log("API response:", data);
 
-      return data.generated_text || "No response.";
+      return data.choices[0]?.message?.content || "No response.";
     } catch (error) {
       console.error("Fetch error:", error);
       return "Error: Could not connect to AI.";
@@ -60,7 +60,11 @@
     addMessage(message, true);
     userInput.value = "";
 
-    const loadingMsg = addMessage("Thinking...", false);
+    const loadingMsg = document.createElement("div");
+    loadingMsg.className = "message bot-message";
+    loadingMsg.textContent = "Thinking...";
+    chatMessages.appendChild(loadingMsg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
     const aiResponse = await getAIResponse(message);
     chatMessages.removeChild(loadingMsg);
