@@ -1,6 +1,6 @@
 (async () => {
   // API Configuration
-  const API_KEY = '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'; // Replace with your OpenAI API key
+  const API_KEY = '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'; // Replace with your OpenAI API key
   const API_URL = "https://api.openai.com/v1/chat/completions"; // OpenAI's ChatGPT API endpoint
 
   // Chat elements
